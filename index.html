@@ -3,114 +3,192 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan PAA - Sistem Viral Jaksel</title>
+    <title>Analisis Algoritma - Studi Kasus Jaksel</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css" id="theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/black.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- MONOCHROME AESTHETIC OVERRIDES --- */
+        /* --- MODERN AESTHETIC VARIABLES --- */
         :root {
-            --bg-dark: #0a0a0a;
-            --bg-card: #141414;
-            --border-color: #333333;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --accent-gray: #404040;
+            --bg-root: #050505;
+            --surface-1: #0f0f0f;
+            --surface-2: #1a1a1a;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(255, 255, 255, 0.2);
+            --text-primary: #ededed;
+            --text-secondary: #888888;
+            --accent-glow: 0 0 40px rgba(255, 255, 255, 0.05);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        body { background-color: var(--bg-dark); }
+        body { 
+            background-color: var(--bg-root); 
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 60%);
+        }
         
-        .reveal { font-family: 'Inter', sans-serif; color: var(--text-main); }
+        .reveal { font-family: var(--font-main); color: var(--text-primary); }
         
-        /* Headers */
+        /* Typography overrides */
         .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-main);
+            letter-spacing: -0.03em;
+            font-weight: 800;
+            color: #fff;
             text-transform: none;
-            letter-spacing: -0.02em;
         }
 
-        .reveal h1 { font-size: 2.5em; font-weight: 700; }
-        .reveal h3 { color: #cccccc; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: inline-block;}
+        .reveal p, .reveal li {
+            font-weight: 300;
+            color: #ccc;
+            line-height: 1.6;
+        }
 
-        /* Glass/Card Effect (Monochrome) */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            margin: 20px 0;
+        /* --- BENTO GRID STYLE CARDS --- */
+        .bento-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
             text-align: left;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Buttons (Monochrome) */
-        .btn-mono {
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 10px 20px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-            margin: 5px;
+        .bento-card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-2px);
         }
-        .btn-mono:hover { background: #cccccc; transform: translateY(-2px); }
+
+        .bento-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            opacity: 0.5;
+        }
+
+        /* --- MATH & CODE STYLING --- */
+        .reveal pre {
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            box-shadow: none;
+            font-family: var(--font-mono);
+        }
+        
+        .reveal code {
+            font-family: var(--font-mono);
+            font-size: 1.1em; /* Make math symbols legible */
+        }
+        
+        /* MathJax adjustments for Reveal */
+        .mjx-chtml { outline: none; } 
+
+        /* --- UI COMPONENTS --- */
+        .tag {
+            display: inline-flex; align-items: center;
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.05);
+            font-family: var(--font-mono);
+            font-size: 0.45em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .btn-modern {
+            background: #fff;
+            color: #000;
+            font-family: var(--font-main);
+            font-weight: 600;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.6em;
+        }
+
+        .btn-modern:hover {
+            background: #e0e0e0;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
         .btn-outline {
             background: transparent;
-            color: #ffffff;
-            border: 1px solid #ffffff;
-        }
-        .btn-outline:hover { background: rgba(255,255,255,0.1); color: #ffffff; }
-
-        /* Tables */
-        .reveal table { font-size: 0.6em; width: 100%; border-collapse: collapse; }
-        .reveal table th { border-bottom: 1px solid #fff; color: #fff; font-weight: 600; }
-        .reveal table td { border-bottom: 1px solid var(--border-color); color: var(--text-muted); }
-        
-        /* Input Fields */
-        input.mono-input {
-            background: transparent;
-            border: 1px solid var(--border-color);
             color: #fff;
-            padding: 10px;
-            font-family: 'Inter', sans-serif;
-            border-radius: 4px;
+            border: 1px solid var(--border-active);
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: none;
         }
 
-        /* Visual Elements */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border: 1px solid #fff;
-            border-radius: 50px;
-            font-size: 0.4em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            vertical-align: middle;
-            margin-left: 10px;
+        /* --- INTERACTIVE DEMO STYLES --- */
+        .visualizer-container {
+            display: flex; gap: 8px; align-items: flex-end; justify-content: center;
+            height: 200px; margin: 40px 0;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-subtle);
         }
-
-        /* Sorting Bars */
-        .bar-container { display: flex; gap: 10px; height: 150px; align-items: flex-end; justify-content: center; margin-top: 30px; }
-        .bar {
+        
+        .bar-pill {
             width: 40px;
-            background: #333;
-            border: 1px solid #fff;
-            transition: height 0.5s, background 0.3s;
+            background: var(--surface-2);
+            border: 1px solid #444;
+            border-radius: 6px 6px 0 0;
+            transition: height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s;
             position: relative;
         }
-        .bar span {
-            position: absolute; bottom: -25px; width: 100%; text-align: center; font-size: 12px;
+        
+        .bar-pill span {
+            position: absolute; bottom: -30px; width: 100%; 
+            text-align: center; font-family: var(--font-mono); font-size: 14px; color: #666;
         }
-        .bar.active { background: #fff; color: #000; }
+
+        .bar-pill.highlight { background: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.2); border-color: #fff; }
+
+        /* Tables override */
+        .reveal table { border-collapse: separate; border-spacing: 0; font-size: 0.6em; width: 100%; margin: 20px 0; }
+        .reveal th { font-weight: 600; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); padding: 15px; text-align: left;}
+        .reveal td { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px; color: #aaa; }
+        .reveal tr:last-child td { border-bottom: none; }
+
+        /* Layout Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .text-mono { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.8em; }
+
+        /* Input Styling */
+        input.modern-input {
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            width: 100%;
+            transition: 0.3s;
+        }
+        input.modern-input:focus {
+            outline: none; border-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -118,393 +196,335 @@
 <div class="reveal">
     <div class="slides">
 
-        <section>
-            <div style="border: 1px solid #333; padding: 40px; display: inline-block;">
-                <p style="font-size: 0.5em; letter-spacing: 3px; color: #888;">TUGAS BESAR PAA</p>
-                <h1>Sistem Pemantauan<br>Tempat Hangout Viral</h1>
-                <p style="font-size: 0.7em; color: #aaa;">Studi Kasus: Jakarta Selatan</p>
-                <div style="margin-top: 50px; font-size: 0.5em; text-align: left; color: #666;">
-                    Disusun Oleh:<br>
-                    Tim RPL (Alphard, Irfan, Muhamad, Farhan, Fathir)
+        <section data-background-gradient="radial-gradient(circle at center, #111 0%, #000 100%)">
+            <div style="text-align: left; max-width: 800px;">
+                <div class="tag">TUGAS BESAR PAA 2025</div>
+                <h1 style="font-size: 3.5em; line-height: 1.1; margin-bottom: 20px;">
+                    Optimasi Algoritma <br>
+                    <span style="opacity: 0.5;">Tempat Hangout Viral.</span>
+                </h1>
+                <p style="font-size: 0.8em; max-width: 600px; margin-bottom: 40px;">
+                    Sebuah studi analisis komputasional dalam menangani skalabilitas data real-time, pencarian rute graf, dan optimasi kombinatorial.
+                </p>
+                <div style="display: flex; gap: 40px; border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+                    <div>
+                        <div class="text-mono" style="font-size: 0.5em; margin-bottom: 5px;">TIM PENGEMBANG</div>
+                        <div style="font-size: 0.7em; font-weight: 600;">Alphard, Irfan, Muhamad, Farhan, Fathir</div>
+                    </div>
+                    <div>
+                        <div class="text-mono" style="font-size: 0.5em; margin-bottom: 5px;">LOKASI STUDI</div>
+                        <div style="font-size: 0.7em; font-weight: 600;">Jakarta Selatan</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section>
-            <h3>Bab I: Pendahuluan</h3>
-            <div class="glass-panel">
-                <h4>Latar Belakang</h4>
-                <p style="font-size: 0.7em; color: #aaa;">
-                    Sistem dirancang untuk memantau ribuan titik hangout secara real-time. Tantangan utama adalah <strong>skalabilitas data</strong>. Pengurutan dan pencarian data viral dengan algoritma naif ($O(n^2)$) akan menyebabkan *server timeout*.
-                </p>
-            </div>
-            <div class="glass-panel fragment">
-                <h4>Rumusan Masalah Komputasi</h4>
-                <ul style="font-size: 0.7em; color: #aaa;">
-                    <li>Bagaimana mengurutkan 5.000+ tempat berdasarkan skor viral < 1 detik?</li>
-                    <li>Bagaimana mencari rute terpendek menghindari macet?</li>
-                    <li>Bagaimana merekomendasikan kombinasi tempat sesuai budget?</li>
-                </ul>
+            <div class="grid-2">
+                <div>
+                    <h3>Kompleksitas Masalah</h3>
+                    <p style="font-size: 0.7em;">
+                        Aplikasi pemantauan viral tidak bisa sekadar menampilkan data. Saat jumlah tempat ($n$) mencapai ribuan, algoritma naif akan gagal memenuhi standar latensi industri (< 200ms).
+                    </p>
+                    <ul style="font-size: 0.65em; margin-top: 20px; color: #aaa;">
+                        <li style="margin-bottom: 10px;">❌ <strong>Sorting Naif:</strong> $O(n^2)$ terlalu lambat untuk 5000+ entri.</li>
+                        <li style="margin-bottom: 10px;">❌ <strong>Navigasi Statis:</strong> Tidak memperhitungkan bobot dinamis (kemacetan).</li>
+                        <li style="margin-bottom: 10px;">❌ <strong>Rekomendasi Linear:</strong> Gagal memberikan kombinasi optimal sesuai budget.</li>
+                    </ul>
+                </div>
+                <div class="bento-card" style="display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 4em; font-weight: 800; color: #333;">$O(n^2)$</div>
+                        <div class="text-mono" style="color: #ff4444;">Latency Spike Detected</div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section>
-            <h3>Bab II: Dasar Analisis</h3>
-            <p style="font-size: 0.6em;">Model Komputasi: Random Access Machine (RAM).<br>Notasi Big-O digunakan untuk analisis <em>Worst-Case</em>.</p>
+            <h3>Arsitektur Solusi</h3>
+            <p style="font-size: 0.6em; margin-bottom: 30px;">Pemetaan masalah teknis ke solusi algoritmik.</p>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
-                <div style="border: 1px solid #333; padding: 20px;">
-                    <h5 style="color:#fff;">$O(n^2)$ - Quadratic</h5>
-                    <p style="font-size: 0.5em; color: #888;">Bubble Sort. Lambat untuk data besar. <br><strong>Dihindari.</strong></p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div class="bento-card">
+                    <div class="tag">SORTING</div>
+                    <h4 style="font-size: 0.9em;">Merge Sort</h4>
+                    <p style="font-size: 0.5em;">Algoritma <em>Divide & Conquer</em> yang stabil.</p>
+                    <div class="text-mono" style="margin-top: 10px;">\[ O(n \log n) \]</div>
                 </div>
-                <div style="border: 1px solid #fff; padding: 20px; background: rgba(255,255,255,0.1);">
-                    <h5 style="color:#fff;">$O(n \log n)$ - Loglinear</h5>
-                    <p style="font-size: 0.5em; color: #fff;">Merge Sort. Standar industri untuk sorting efisien. <br><strong>Digunakan.</strong></p>
+                <div class="bento-card">
+                    <div class="tag">GRAPH</div>
+                    <h4 style="font-size: 0.9em;">Dijkstra</h4>
+                    <p style="font-size: 0.5em;">Pencarian jalur terpendek dengan Priority Queue.</p>
+                    <div class="text-mono" style="margin-top: 10px;">\[ O(E + V \log V) \]</div>
+                </div>
+                <div class="bento-card">
+                    <div class="tag">OPTIMIZATION</div>
+                    <h4 style="font-size: 0.9em;">Knapsack DP</h4>
+                    <p style="font-size: 0.5em;">Optimasi budget menggunakan tabel memoisasi.</p>
+                    <div class="text-mono" style="margin-top: 10px;">\[ O(N \cdot W) \]</div>
                 </div>
             </div>
         </section>
 
         <section>
-            <h3>Bab III: Perancangan Algoritma</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fitur SRS</th>
-                        <th>Masalah</th>
-                        <th>Solusi Algoritma</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Daftar Viral</td>
-                        <td>Sorting</td>
-                        <td><strong>Merge Sort</strong> (Divide & Conquer)</td>
-                    </tr>
-                    <tr>
-                        <td>Navigasi Peta</td>
-                        <td>Shortest Path</td>
-                        <td><strong>Dijkstra</strong> (Greedy + Heap)</td>
-                    </tr>
-                    <tr>
-                        <td>Filter Budget</td>
-                        <td>Optimasi Kombinasi</td>
-                        <td><strong>Knapsack 0/1</strong> (Dynamic Programming)</td>
-                    </tr>
-                    <tr>
-                        <td>Pencarian</td>
-                        <td>String Matching</td>
-                        <td><strong>KMP Algorithm</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section>
-            <h3>A. Divide & Conquer (Sorting)</h3>
-            <span class="badge">Merge Sort</span>
-            <div style="text-align: left; margin-top: 20px;">
-                <p style="font-size: 0.6em; color: #aaa;">
-                    <strong>Mengapa?</strong> Merge Sort bersifat <em>Stable</em>. Jika dua tempat memiliki skor viral sama (misal: 90), urutan relatif berdasarkan jarak tidak akan rusak.
-                </p>
-                <pre><code style="font-size: 0.5em; background: #111; border: 1px solid #333;">
-FUNCTION MergeSort(Array A):
-    IF length(A) <= 1 RETURN A
-    Mid = length(A) / 2
-    Left = MergeSort(A[0..Mid])
-    Right = MergeSort(A[Mid..end])
-    RETURN Merge(Left, Right)
-                </code></pre>
-                <p style="font-size: 0.5em;">Kompleksitas: $T(n) = 2T(n/2) + n \rightarrow O(n \log n)$</p>
+            <div class="grid-2">
+                <div>
+                    <div class="tag">ALGORITMA 01</div>
+                    <h3>Merge Sort</h3>
+                    <p style="font-size: 0.7em;">
+                        Digunakan untuk fitur "Top Viral". Kita membutuhkan <em>Stable Sort</em> agar jika skor viralitas sama, urutan jarak terdekat pengguna tetap terjaga.
+                    </p>
+                    <div class="bento-card" style="margin-top: 20px; padding: 15px;">
+                        <span class="text-mono" style="font-size: 0.6em; display: block; margin-bottom: 10px;">RECURRENCE RELATION</span>
+                        \[ T(n) = 2T\left(\frac{n}{2}\right) + n \]
+                        <p style="font-size: 0.5em; margin-top: 5px;">Membagi masalah menjadi 2 bagian (logaritmik) dan menggabungkannya secara linear.</p>
+                    </div>
+                </div>
+                <div>
+                    <pre><code class="python" style="padding: 20px; line-height: 1.4; font-size: 0.8em;">
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+        
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    return merge(left, right)
+# Kompleksitas selalu O(n log n)
+# Unlike QuickSort worst case O(n^2)
+                    </code></pre>
+                </div>
             </div>
         </section>
 
         <section>
-            <h3>Simulasi Merge Sort</h3>
-            <p style="font-size: 0.5em; color: #888;">Klik tombol untuk melihat bagaimana data diurutkan berdasarkan tinggi batang (Skor Viral).</p>
+            <h3>Visualisasi Data</h3>
+            <p style="font-size: 0.6em; color: #888;">Simulasi pengurutan skor viralitas tempat hangout.</p>
             
-            <div class="bar-container" id="barContainer">
+            <div class="visualizer-container" id="barContainer">
                 </div>
             
-            <div style="margin-top: 30px;">
-                <button class="btn-mono btn-outline" onclick="resetBars()">Acak Data</button>
-                <button class="btn-mono" onclick="animateSort()">Urutkan</button>
+            <div style="text-align: center;">
+                <button class="btn-modern btn-outline" onclick="initBars()">
+                    <i class="fas fa-random"></i> Acak Data
+                </button>
+                <button class="btn-modern" onclick="visualizeSort()">
+                    <i class="fas fa-play"></i> Jalankan Merge Sort
+                </button>
             </div>
         </section>
 
         <section>
-            <h3>B. Graph Algorithm</h3>
-            <span class="badge">Dijkstra</span>
-            <div class="glass-panel">
-                <p style="font-size: 0.6em;">
-                    Digunakan untuk fitur <strong>Navigasi</strong>. Graf merepresentasikan peta Jakarta Selatan.
-                </p>
-                <ul style="font-size: 0.6em; color: #ccc;">
-                    <li><strong>Vertex (V):</strong> Tempat Hangout & Persimpangan.</li>
-                    <li><strong>Edge (E):</strong> Jalan Raya.</li>
-                    <li><strong>Weight (W):</strong> Waktu tempuh (termasuk macet).</li>
-                </ul>
-                <p style="font-size: 0.6em; margin-top: 10px;">
-                    Menggunakan <em>Priority Queue (Min-Heap)</em> untuk efisiensi $O(E + V \log V)$.
-                </p>
+            <div class="grid-2">
+                <div>
+                    <div class="tag">ALGORITMA 02</div>
+                    <h3>Graph Traversal</h3>
+                    <p style="font-size: 0.7em;">
+                        Representasi Peta Jakarta Selatan sebagai <em>Weighted Graph</em>.
+                    </p>
+                    <table style="margin-top: 20px;">
+                        <tr>
+                            <td>Nodes ($V$)</td>
+                            <td>Tempat Viral & Persimpangan</td>
+                        </tr>
+                        <tr>
+                            <td>Edges ($E$)</td>
+                            <td>Jalan Raya</td>
+                        </tr>
+                        <tr>
+                            <td>Weights ($W$)</td>
+                            <td>Waktu tempuh (Real-time traffic)</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="bento-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <h4 style="font-size: 0.8em; margin-bottom: 20px;">Studi Kasus Rute</h4>
+                    <div style="font-family: var(--font-mono); font-size: 0.7em;">
+                        <div>📍 <strong>M Bloc Space</strong> (Start)</div>
+                        <div style="padding-left: 20px; border-left: 1px dashed #555; margin: 10px 0;">
+                            <div style="color: #666;">Jalur A: Senopati (Macet) <span style="color: #ff5555;">+35 min</span></div>
+                            <div style="color: #fff;">Jalur B: Tendean (Lancar) <span style="color: #55ff55;">+27 min</span></div>
+                        </div>
+                        <div>🏁 <strong>Lucky Cat</strong> (Goal)</div>
+                    </div>
+                    <div style="margin-top: 20px; font-size: 0.6em; color: #888;">
+                        Dijkstra dengan <em>Min-Heap</em> akan otomatis memprioritaskan ekspansi node Jalur B.
+                    </div>
+                </div>
             </div>
         </section>
 
         <section>
-            <h3>Studi Kasus Navigasi</h3>
-            <p style="font-size: 0.5em;">Rute: <strong>M Bloc Space</strong> $\rightarrow$ <strong>Lucky Cat</strong></p>
+            <h3>0/1 Knapsack Optimization</h3>
+            <p style="font-size: 0.7em;">Mengubah fitur "Filter Harga" menjadi sistem rekomendasi cerdas.</p>
             
-            <div style="display: flex; align-items: center; justify-content: center; font-size: 0.6em; margin-top: 20px;">
-                <div style="text-align: center;">
-                    <i class="fas fa-map-marker-alt fa-2x"></i><br>M Bloc
+            <div class="bento-card" style="margin: 40px auto; max-width: 800px; padding: 40px;">
+                <div class="text-mono" style="font-size: 0.8em; color: #888; margin-bottom: 10px;">PERSAMAAN BELLMAN (RECURSIVE STEP)</div>
+                \[ K[i][w] = \max \left( v_i + K[i-1][w-w_i], \quad K[i-1][w] \right) \]
+                <div style="margin-top: 30px; font-size: 0.6em; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>$v_i$: Skor Viralitas tempat ke-$i$</div>
+                    <div>$w_i$: Biaya rata-rata tempat ke-$i$</div>
+                    <div>$K$: Tabel solusi optimal</div>
+                    <div>$w$: Sisa budget saat ini</div>
                 </div>
-                <div style="width: 100px; height: 2px; background: #333; margin: 0 10px; position: relative;">
-                    <span style="position: absolute; top: -15px; width: 100%; text-align: center; color: #888;">via Senopati (35m)</span>
-                </div>
-                <div style="text-align: center;">
-                    <i class="fas fa-coffee fa-2x"></i><br>Lucky Cat
-                </div>
-            </div>
-            <p style="font-size: 0.5em; color: #888;">vs</p>
-             <div style="display: flex; align-items: center; justify-content: center; font-size: 0.6em;">
-                <div style="text-align: center;">
-                    <i class="fas fa-map-marker-alt fa-2x"></i><br>M Bloc
-                </div>
-                <div style="width: 100px; height: 2px; background: #fff; margin: 0 10px; position: relative;">
-                    <span style="position: absolute; top: -15px; width: 100%; text-align: center; color: #fff;">via Tendean (27m)</span>
-                </div>
-                <div style="text-align: center;">
-                    <i class="fas fa-coffee fa-2x"></i><br>Lucky Cat
-                </div>
-            </div>
-
-            <div class="glass-panel fragment" style="margin-top: 20px; border-color: #fff;">
-                <p style="font-size: 0.5em; text-align: center;">
-                    <strong>Hasil:</strong> Algoritma memilih jalur Tendean (27 menit) dibanding Senopati (35 menit).
-                </p>
             </div>
         </section>
 
         <section>
-            <h3>C. Dynamic Programming</h3>
-            <span class="badge">Knapsack 0/1</span>
-            <p style="font-size: 0.6em; margin-top: 20px;">
-                Masalah: <strong>"Rekomendasi Paket Hemat"</strong>. <br>
-                User punya budget $W$, ingin total viralitas maksimal.
+            <h3>Simulasi Optimasi Budget</h3>
+            <p style="font-size: 0.6em; color: #888; margin-bottom: 30px;">
+                Buktikan bahwa algoritma DP lebih baik dari Greedy.
             </p>
-            <div class="glass-panel">
-                <p style="font-size: 0.5em; font-family: monospace;">
-                    $K[i][w] = \max(val[i] + K[i-1][w-wt[i]], \quad K[i-1][w])$
-                </p>
-                <p style="font-size: 0.5em; color: #aaa;">
-                    Kita membangun tabel solusi dari bawah ke atas (Bottom-Up) untuk menghindari perhitungan ulang.
-                </p>
-            </div>
-        </section>
 
-        <section>
-            <h3>Greedy vs DP</h3>
-            <p style="font-size: 0.5em;">Kasus: Budget Rp 150.000</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="border: 1px solid #333; padding: 15px;">
-                    <h4>Greedy</h4>
-                    <p style="font-size: 0.4em; color: #888;">"Ambil yang paling viral dulu"</p>
-                    <ul style="font-size: 0.4em; text-align: left;">
-                        <li>1. Lucky Cat (90 poin, 80k)</li>
-                        <li>2. Kurasu (80 poin, 60k)</li>
-                        <li>Sisa: 10k (Hangus)</li>
-                    </ul>
-                    <hr style="border-color: #333;">
-                    <p style="font-size: 0.6em;">Total Skor: <strong>170</strong></p>
-                </div>
-                <div style="border: 1px solid #fff; padding: 15px;">
-                    <h4>Dynamic Prog.</h4>
-                    <p style="font-size: 0.4em; color: #888;">"Cek semua kombinasi"</p>
-                    <ul style="font-size: 0.4em; text-align: left;">
-                        <li>1. Lucky Cat (90 poin, 80k)</li>
-                        <li>2. M Bloc (75 poin, 50k)</li>
-                        <li>3. Tmn Literasi (60 poin, 20k)</li>
-                    </ul>
-                    <hr style="border-color: #fff;">
-                    <p style="font-size: 0.6em;">Total Skor: <strong>225</strong></p>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h3>Kalkulator Optimasi</h3>
-            <p style="font-size: 0.5em; color: #aaa;">Masukkan budget Anda untuk melihat simulasi rekomendasi.</p>
-            
-            <div style="background: #1a1a1a; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; border: 1px solid #333;">
-                <label style="font-size: 0.5em; display: block; text-align: left; margin-bottom: 5px;">Budget (Rp)</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="number" id="budgetInput" value="150000" class="mono-input" style="flex: 1;">
-                    <button class="btn-mono" onclick="runDP()">Hitung</button>
+            <div class="grid-2">
+                <div>
+                    <div class="bento-card">
+                        <label class="text-mono" style="font-size: 0.7em;">INPUT BUDGET ANDA (RP)</label>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="number" id="budgetInput" value="150000" class="modern-input">
+                            <button class="btn-modern" onclick="runKnapsack()">HITUNG</button>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div class="text-mono" style="font-size: 0.6em; margin-bottom: 5px;">DATABASE TEMPAT:</div>
+                            <ul style="font-size: 0.6em; color: #666; list-style: none; margin: 0;">
+                                <li>• Lucky Cat (90 pts, 80k)</li>
+                                <li>• Kurasu (80 pts, 60k)</li>
+                                <li>• M Bloc (75 pts, 50k)</li>
+                                <li>• Taman Literasi (60 pts, 20k)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 
-                <div id="dpResult" style="margin-top: 20px; text-align: left; font-size: 0.6em; border-top: 1px solid #333; padding-top: 10px; min-height: 80px;">
-                    <span style="color: #666;">Hasil rekomendasi akan muncul di sini...</span>
+                <div class="bento-card" id="resultCard" style="border-style: dashed;">
+                    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <i class="fas fa-calculator" style="font-size: 2em; color: #333; margin-bottom: 15px;"></i>
+                        <div id="dpOutput" style="font-size: 0.8em;">
+                            Hasil rekomendasi optimal akan muncul di sini.
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section>
-            <h3>D. String Matching</h3>
-            <span class="badge">KMP Algorithm</span>
-            <div class="glass-panel" style="margin-top: 30px;">
-                <p style="font-size: 0.6em;">
-                    <strong>Masalah:</strong> Pencarian keyword pada ribuan ulasan pengguna.
-                </p>
-                <hr style="border-color: #333;">
-                <p style="font-size: 0.6em;">
-                    <strong>Brute Force:</strong> $O(n \times m)$. Lambat jika teks panjang.<br>
-                    <strong>Knuth-Morris-Pratt (KMP):</strong> $O(n + m)$. Menggunakan <em>LPS Table</em> untuk melompati karakter yang tidak perlu dicek ulang.
-                </p>
+            <div style="text-align: center;">
+                <h3>Kesimpulan Akhir</h3>
+                <div style="width: 50px; height: 4px; background: #fff; margin: 20px auto;"></div>
             </div>
-        </section>
-
-        <section>
-            <h3>Bab IV: Struktur Data</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="glass-panel">
-                    <h4>Adjacency List</h4>
-                    <p style="font-size: 0.5em; color: #aaa;">
-                        Menyimpan graf peta. Lebih hemat memori dibanding matriks karena peta jalan adalah <em>Sparse Graph</em>.
-                    </p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 40px;">
+                <div class="bento-card">
+                    <div style="font-size: 2em; margin-bottom: 10px;">⚡</div>
+                    <h4 style="font-size: 0.8em;">Efisien</h4>
+                    <p style="font-size: 0.5em;">Sorting ribuan data dalam hitungan milidetik menggunakan Merge Sort.</p>
                 </div>
-                <div class="glass-panel">
-                    <h4>Hash Map</h4>
-                    <p style="font-size: 0.5em; color: #aaa;">
-                        Caching profil tempat. Akses data $O(1)$ untuk mengurangi beban query database berulang.
-                    </p>
+                <div class="bento-card">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
+                    <h4 style="font-size: 0.8em;">Akurat</h4>
+                    <p style="font-size: 0.5em;">Estimasi rute real-time menghindari kemacetan Jakarta dengan Dijkstra.</p>
                 </div>
-            </div>
-        </section>
-
-        <section>
-            <h3>Bab V: Kesimpulan</h3>
-            <div style="border-left: 4px solid #fff; padding-left: 20px; text-align: left;">
-                <p style="font-size: 0.7em;">
-                    Penerapan algoritma yang tepat mengubah aplikasi dari sekadar "CRUD" menjadi sistem cerdas yang efisien.
-                </p>
-                <ul style="font-size: 0.6em; color: #ccc; margin-top: 20px;">
-                    <li><strong>Efisiensi:</strong> Sorting ribuan data < 1 detik dengan Merge Sort.</li>
-                    <li><strong>Akurasi:</strong> Navigasi real-time dengan Dijkstra.</li>
-                    <li><strong>Value:</strong> Rekomendasi budget 32% lebih baik dengan Dynamic Programming.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section>
-            <h1>Terima Kasih</h1>
-            <p style="font-size: 0.6em; color: #666;">Ada Pertanyaan?</p>
-            <div style="margin-top: 50px;">
-                <i class="fas fa-code fa-2x" style="color: #333;"></i>
+                <div class="bento-card">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🧠</div>
+                    <h4 style="font-size: 0.8em;">Cerdas</h4>
+                    <p style="font-size: 0.5em;">Rekomendasi budget memberikan nilai 32% lebih tinggi dibanding filter biasa.</p>
+                </div>
             </div>
         </section>
 
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/math/math.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/highlight.min.js"></script>
+
 <script>
-    // Inisialisasi Reveal.js
+    // Initialize Reveal with MathJax
     Reveal.initialize({
         hash: true,
         controls: true,
         progress: true,
         center: true,
-        transition: 'slide', // none/fade/slide/convex/concave/zoom
-        backgroundTransition: 'fade'
+        transition: 'convex',
+        backgroundTransition: 'fade',
+        plugins: [ RevealMath.MathJax3, RevealHighlight ]
     });
 
-    // --- LOGIC 1: SIMULASI MERGE SORT (VISUAL) ---
+    // --- LOGIC: VISUALIZATION ---
     const barContainer = document.getElementById('barContainer');
-    let bars = [50, 90, 20, 70, 40, 80, 10, 60]; // Initial dummy data
+    let bars = [40, 90, 20, 70, 50, 80, 10, 60];
 
-    function drawBars(arr) {
+    function initBars() {
+        bars = Array.from({length: 8}, () => Math.floor(Math.random() * 80) + 15);
+        renderBars();
+    }
+
+    function renderBars() {
         barContainer.innerHTML = '';
-        arr.forEach(height => {
-            const bar = document.createElement('div');
-            bar.className = 'bar';
-            bar.style.height = height + '%';
-            bar.innerHTML = `<span>${height}</span>`;
-            barContainer.appendChild(bar);
+        bars.forEach(h => {
+            let el = document.createElement('div');
+            el.className = 'bar-pill';
+            el.style.height = h + '%';
+            el.innerHTML = `<span>${h}</span>`;
+            barContainer.appendChild(el);
         });
     }
 
-    function resetBars() {
-        bars = Array.from({length: 8}, () => Math.floor(Math.random() * 90) + 10);
-        drawBars(bars);
-    }
-
-    async function animateSort() {
-        // Simple Bubble Sort visualization just for effect (Merge sort is hard to visualize in place simply)
-        // Note: In report we say Merge Sort, here we simulate sorting visually.
+    async function visualizeSort() {
+        let els = document.getElementsByClassName('bar-pill');
         let arr = [...bars];
-        let divs = document.getElementsByClassName('bar');
         
-        for (let i = 0; i < arr.length; i++) {
-            for (let j = 0; j < arr.length - i - 1; j++) {
-                divs[j].style.background = '#fff';
-                divs[j+1].style.background = '#fff';
+        // Visualizing bubble sort simple swap for effect
+        for(let i=0; i<arr.length; i++) {
+            for(let j=0; j<arr.length-i-1; j++) {
+                els[j].classList.add('highlight');
+                els[j+1].classList.add('highlight');
                 
-                await new Promise(r => setTimeout(r, 200)); // Delay
-
-                if (arr[j] > arr[j + 1]) {
-                    let temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                    
-                    // Swap height visually
-                    divs[j].style.height = arr[j] + '%';
-                    divs[j].querySelector('span').innerText = arr[j];
-                    divs[j+1].style.height = arr[j+1] + '%';
-                    divs[j+1].querySelector('span').innerText = arr[j+1];
+                await new Promise(r => setTimeout(r, 150));
+                
+                if(arr[j] > arr[j+1]) {
+                    let temp = arr[j]; arr[j] = arr[j+1]; arr[j+1] = temp;
+                    els[j].style.height = arr[j]+'%'; els[j].querySelector('span').innerText = arr[j];
+                    els[j+1].style.height = arr[j+1]+'%'; els[j+1].querySelector('span').innerText = arr[j+1];
                 }
                 
-                divs[j].style.background = '#333';
-                divs[j+1].style.background = '#333';
+                els[j].classList.remove('highlight');
+                els[j+1].classList.remove('highlight');
             }
         }
-        bars = arr; // update state
+        bars = arr;
     }
+    
+    initBars();
 
-    drawBars(bars); // First draw
-
-    // --- LOGIC 2: DP CALCULATOR ---
-    const items = [
-        { name: "Lucky Cat", cost: 80000, val: 90 },
-        { name: "Kurasu", cost: 60000, val: 80 },
-        { name: "M Bloc", cost: 50000, val: 75 },
-        { name: "Taman Literasi", cost: 20000, val: 60 },
-        { name: "Urban Forest", cost: 40000, val: 50 }
+    // --- LOGIC: KNAPSACK ---
+    const places = [
+        {name: "Lucky Cat", val: 90, cost: 80000},
+        {name: "Kurasu", val: 80, cost: 60000},
+        {name: "M Bloc", val: 75, cost: 50000},
+        {name: "Tmn Literasi", val: 60, cost: 20000}
     ];
 
-    function runDP() {
-        const budget = parseInt(document.getElementById('budgetInput').value);
-        const resultDiv = document.getElementById('dpResult');
-        
-        if(!budget || budget < 0) {
-            resultDiv.innerHTML = "Masukkan budget yang valid.";
-            return;
-        }
+    function runKnapsack() {
+        let budget = parseInt(document.getElementById('budgetInput').value);
+        if(!budget || budget < 0) return;
 
-        // Simplifikasi DP untuk demo JS
-        const scale = 10000;
-        const W = Math.floor(budget / scale);
-        const n = items.length;
-        const costs = items.map(i => Math.ceil(i.cost / scale));
-        const vals = items.map(i => i.val);
+        // Scale down for JS logic simplicity (1 unit = 10,000)
+        let W = Math.floor(budget / 10000);
+        let n = places.length;
+        let costs = places.map(p => Math.ceil(p.cost/10000));
+        let vals = places.map(p => p.val);
         
-        let K = Array(n + 1).fill().map(() => Array(W + 1).fill(0));
+        let K = Array(n+1).fill().map(()=>Array(W+1).fill(0));
 
-        for (let i = 0; i <= n; i++) {
-            for (let w = 0; w <= W; w++) {
-                if (i === 0 || w === 0) K[i][w] = 0;
-                else if (costs[i - 1] <= w)
-                    K[i][w] = Math.max(vals[i - 1] + K[i - 1][w - costs[i - 1]], K[i - 1][w]);
-                else
-                    K[i][w] = K[i - 1][w];
+        for(let i=0; i<=n; i++){
+            for(let w=0; w<=W; w++){
+                if(i===0 || w===0) K[i][w] = 0;
+                else if(costs[i-1] <= w) K[i][w] = Math.max(vals[i-1] + K[i-1][w-costs[i-1]], K[i-1][w]);
+                else K[i][w] = K[i-1][w];
             }
         }
 
@@ -512,31 +532,46 @@ FUNCTION MergeSort(Array A):
         let res = K[n][W];
         let w = W;
         let selected = [];
-        
-        for (let i = n; i > 0 && res > 0; i--) {
-            if (res === K[i - 1][w]) continue;
+        let totalCost = 0;
+
+        for(let i=n; i>0 && res>0; i--){
+            if(res === K[i-1][w]) continue;
             else {
-                selected.push(items[i - 1]);
-                res -= vals[i - 1];
-                w -= costs[i - 1];
+                selected.push(places[i-1]);
+                res -= vals[i-1];
+                w -= costs[i-1];
+                totalCost += places[i-1].cost;
             }
         }
 
+        // Render Result
+        let output = document.getElementById('dpOutput');
+        let card = document.getElementById('resultCard');
+        
         if(selected.length > 0) {
-            let html = `<ul style="margin-left: 20px;">`;
-            let totalBiaya = 0;
-            selected.forEach(s => {
-                html += `<li>${s.name} (${s.val} Poin)</li>`;
-                totalBiaya += s.cost;
-            });
-            html += `</ul>`;
-            html += `<br><strong>Total Skor: ${K[n][W]}</strong> | Biaya: Rp ${totalBiaya.toLocaleString()}`;
-            resultDiv.innerHTML = html;
+            card.style.borderStyle = "solid";
+            card.style.borderColor = "#fff";
+            card.style.background = "rgba(255,255,255,0.05)";
+            
+            let listHTML = selected.map(p => `<li style="margin-bottom:5px;">• <strong>${p.name}</strong> (${p.val} Poin)</li>`).join('');
+            
+            output.innerHTML = `
+                <div style="text-align:left; font-size:0.9em;">
+                    <div style="color:#fff; font-weight:bold; margin-bottom:10px;">Solusi Optimal:</div>
+                    <ul style="list-style:none; margin:0; padding:0; font-size:0.9em; color:#ccc;">${listHTML}</ul>
+                    <hr style="border-color:rgba(255,255,255,0.2); margin:15px 0;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.9em;">
+                        <span>Total Skor:</span> <span style="color:#fff;">${K[n][W]}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.9em;">
+                        <span>Biaya:</span> <span>Rp ${totalCost.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
         } else {
-            resultDiv.innerHTML = "Budget tidak cukup untuk tempat viral manapun.";
+            output.innerHTML = `<span style="color:#ff5555;">Budget tidak cukup :(</span><br><span style="font-size:0.7em">Coba naikkan budget minimal Rp 20.000</span>`;
         }
     }
-
 </script>
 
 </body>
