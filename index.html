@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pemantauan Viral Jaksel | Algorithm Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --primary: #38bdf8; /* Cyan */
+            --secondary: #818cf8; /* Indigo */
+            --accent: #f472b6; /* Pink */
+            --glass: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(244, 114, 182, 0.1) 0%, transparent 40%);
+        }
+
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+
+        /* --- Navbar --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); letter-spacing: 1px; }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 4rem; line-height: 1.1;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; }
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none; border-radius: 50px;
+            color: #fff; font-weight: 600; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3); }
+
+        /* --- Grid Layouts --- */
+        .section { padding: 5rem 10%; }
+        .section-title { font-size: 2.5rem; margin-bottom: 3rem; text-align: center; }
+        .section-subtitle { color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; display: block; text-align: center; margin-bottom: 1rem; }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+
+        /* --- Glass Cards --- */
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .card h3 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .card p { color: var(--text-muted); line-height: 1.6; font-size: 0.9rem; }
+        .icon-box {
+            width: 50px; height: 50px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Interactive Demo Section --- */
+        .demo-container {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Visual List for Sorting */
+        .place-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .place-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            transition: 0.5s;
+        }
+        .place-item.highlight { background: rgba(80, 250, 123, 0.1); border: 1px solid #50fa7b; }
+        .score-badge { 
+            background: var(--secondary); padding: 5px 10px; 
+            border-radius: 8px; font-size: 0.8rem; font-weight: bold; 
+        }
+
+        /* Budget Calculator */
+        .calc-box { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); }
+        .input-group input {
+            width: 100%; padding: 12px;
+            background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
+            border-radius: 8px; color: #fff;
+        }
+        .result-box {
+            background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 10%; text-align: center; color: var(--text-muted);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .calc-box { grid-template-columns: 1fr; }
+            nav { padding: 1rem; }
+            .nav-links { display: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">JAKSEL.VIRAL_</div>
+        <div class="nav-links">
+            <a href="#algoritma">Analisis Algoritma</a>
+            <a href="#simulasi">Simulasi Live</a>
+            <a href="#about">Tentang</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div style="position: absolute; width: 300px; height: 300px; background: var(--primary); filter: blur(150px); opacity: 0.2; top: -50px; left: -50px;"></div>
+        
+        <span class="section-subtitle">Tugas Besar PAA 2025</span>
+        <h1>Optimasi Algoritma <br> Tempat Hangout</h1>
+        <p>Bukan sekadar rekomendasi. Kami menggunakan Merge Sort, Dijkstra, dan Dynamic Programming untuk memastikan malam minggumu di Jakarta Selatan efisien secara matematis.</p>
+        <a href="#simulasi" class="btn">Coba Simulasi <i class="fas fa-arrow-right"></i></a>
+    </section>
+
+    <section id="algoritma" class="section">
+        <span class="section-subtitle">Di Balik Layar</span>
+        <h2 class="section-title">Core Engine</h2>
+        <div class="grid-3">
+            <div class="card">
+                <div class="icon-box"><i class="fas fa-sort-amount-down"></i></div>
+                <h3>Merge Sort</h3>
+                <p>Mengurutkan ribuan data tempat viral berdasarkan skor tren. Menggunakan pendekatan <em>Divide and Conquer</em> dengan kompleksitas <strong>O(n log n)</strong> agar sistem tetap responsif di bawah 3 detik.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fas fa-route"></i></div>
+                <h3>Dijkstra</h3>
+                <p>Menghitung rute tercepat dari posisi Anda ke Kurasu atau M Bloc. Menghindari "jebakan" macet Senopati dengan kalkulasi bobot graf real-time.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fas fa-wallet"></i></div>
+                <h3>Dynamic Programming</h3>
+                <p>Algoritma cerdas untuk fitur "Filter Budget". Menyelesaikan <em>Knapsack Problem</em> untuk memberikan kombinasi tempat hangout maksimal tanpa bikin dompet jebol.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="simulasi" class="section">
+        <span class="section-subtitle">Pembuktian Konsep</span>
+        <h2 class="section-title">Interaktif Demo</h2>
+
+        <div class="demo-container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3><i class="fas fa-list-ol" style="color:var(--primary)"></i> Live Viral Ranking</h3>
+                <div>
+                    <button onclick="shufflePlaces()" class="btn" style="background: transparent; border: 1px solid var(--glass-border); font-size: 0.8rem;">Acak Data</button>
+                    <button onclick="sortPlaces()" class="btn" style="font-size: 0.8rem; margin-left: 10px;">Urutkan (Merge Sort)</button>
+                </div>
+            </div>
+            <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">Simulasi backend mengurutkan tempat berdasarkan skor viralitas.</p>
+            
+            <div id="placeListContainer" class="place-list">
+                </div>
+        </div>
+
+        <div class="demo-container" style="margin-top: 4rem;">
+            <h3><i class="fas fa-calculator" style="color:var(--accent)"></i> Budget Optimizer (Knapsack)</h3>
+            <p style="margin-bottom: 20px; color: var(--text-muted);">Masukkan budget Anda, algoritma akan mencari kombinasi tempat dengan <strong>Total Skor Viralitas Tertinggi</strong>.</p>
+            
+            <div class="calc-box">
+                <div>
+                    <div class="input-group">
+                        <label>Budget Anda (Rp)</label>
+                        <input type="number" id="userBudget" value="150000" step="10000">
+                    </div>
+                    <div class="place-list" style="opacity: 0.7;">
+                        <small>Daftar Tempat Tersedia:</small>
+                        <div class="place-item" style="padding: 8px;"><span>Lucky Cat</span> <span>Rp 80k (Skor 90)</span></div>
+                        <div class="place-item" style="padding: 8px;"><span>Kurasu</span> <span>Rp 60k (Skor 80)</span></div>
+                        <div class="place-item" style="padding: 8px;"><span>M Bloc</span> <span>Rp 50k (Skor 75)</span></div>
+                        <div class="place-item" style="padding: 8px;"><span>Taman Literasi</span> <span>Rp 20k (Skor 60)</span></div>
+                    </div>
+                    <button onclick="calculateDP()" class="btn" style="width: 100%; margin-top: 20px;">Hitung Optimasi</button>
+                </div>
+                
+                <div class="result-box" id="dpResult">
+                    <h4 style="margin-bottom: 10px;">Hasil Rekomendasi:</h4>
+                    <p>Klik tombol hitung untuk melihat keajaiban Dynamic Programming.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>Developed for Analysis of Algorithms Course &copy; 2025</p>
+        <p style="font-size: 0.8rem; margin-top: 10px; color: var(--text-muted);">Universitas Pertamina - RPL Team</p>
+    </footer>
+
+    <script>
+        // --- DATA DUMMY ---
+        const placesData = [
+            { id: 1, name: "Lucky Cat Coffee", score: 92, location: "Kuningan" },
+            { id: 2, name: "M Bloc Space", score: 75, location: "Blok M" },
+            { id: 3, name: "Kurasu Kissaten", score: 80, location: "Senopati" },
+            { id: 4, name: "Taman Literasi", score: 60, location: "Blok M" },
+            { id: 5, name: "Urban Forest", score: 88, location: "Cipete" }
+        ];
+
+        const container = document.getElementById('placeListContainer');
+
+        // Render List Function
+        function renderList(arr) {
+            container.innerHTML = '';
+            arr.forEach(place => {
+                const item = document.createElement('div');
+                item.className = 'place-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${place.name}</strong>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">${place.location}</div>
+                    </div>
+                    <span class="score-badge">Viral Score: ${place.score}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Init Load
+        renderList(placesData);
+
+        // --- SORTING LOGIC ---
+        function shufflePlaces() {
+            const shuffled = [...placesData].sort(() => Math.random() - 0.5);
+            renderList(shuffled);
+        }
+
+        function sortPlaces() {
+            // Simulasi Merge Sort (disini pakai native sort untuk demo visual)
+            const sorted = [...placesData].sort((a, b) => b.score - a.score);
+            renderList(sorted);
+            
+            // Add animation effect
+            const items = document.querySelectorAll('.place-item');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.classList.add('highlight');
+                }, index * 100);
+            });
+            setTimeout(() => {
+                items.forEach(item => item.classList.remove('highlight'));
+            }, 2000);
+        }
+
+        // --- DP LOGIC (KNAPSACK) ---
+        const dpItems = [
+            { name: "Lucky Cat", cost: 80000, val: 90 },
+            { name: "Kurasu", cost: 60000, val: 80 },
+            { name: "M Bloc", cost: 50000, val: 75 },
+            { name: "Taman Literasi", cost: 20000, val: 60 }
+        ];
+
+        function calculateDP() {
+            const budget = parseInt(document.getElementById('userBudget').value);
+            const n = dpItems.length;
+            
+            // DP Table initialization
+            // K[i][w] stores max value for first i items with budget w
+            // Note: For simplicity in JS demo with large numbers, we simplify logic slightly or use scaling
+            // To make it performant in browser for large 'budget', we scale down by 10000
+            
+            const scale = 10000;
+            const W = Math.floor(budget / scale);
+            const costs = dpItems.map(i => Math.ceil(i.cost / scale));
+            const vals = dpItems.map(i => i.val);
+
+            let K = Array(n + 1).fill().map(() => Array(W + 1).fill(0));
+
+            // Build table
+            for (let i = 0; i <= n; i++) {
+                for (let w = 0; w <= W; w++) {
+                    if (i === 0 || w === 0)
+                        K[i][w] = 0;
+                    else if (costs[i - 1] <= w)
+                        K[i][w] = Math.max(vals[i - 1] + K[i - 1][w - costs[i - 1]], K[i - 1][w]);
+                    else
+                        K[i][w] = K[i - 1][w];
+                }
+            }
+
+            // Backtracking to find items
+            let res = K[n][W];
+            let w = W;
+            let selectedItems = [];
+            let totalCost = 0;
+
+            for (let i = n; i > 0 && res > 0; i--) {
+                if (res === K[i - 1][w]) continue;
+                else {
+                    selectedItems.push(dpItems[i - 1]);
+                    res = res - vals[i - 1];
+                    w = w - costs[i - 1];
+                    totalCost += dpItems[i - 1].cost;
+                }
+            }
+
+            // Display Result
+            const resultBox = document.getElementById('dpResult');
+            
+            if (selectedItems.length > 0) {
+                let listHtml = selectedItems.map(item => `<li>${item.name} (${item.val} Poin)</li>`).join('');
+                resultBox.innerHTML = `
+                    <h4 style="color: #50fa7b; margin-bottom: 10px;">Solusi Optimal Ditemukan!</h4>
+                    <ul style="margin-left: 20px; margin-bottom: 10px;">${listHtml}</ul>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                    <p><strong>Total Skor Viral:</strong> ${K[n][W]}</p>
+                    <p><strong>Total Biaya:</strong> Rp ${totalCost.toLocaleString('id-ID')}</p>
+                    <p style="font-size: 0.8rem; margin-top: 10px; color: #94a3b8;">
+                        <em>Dibandingkan algoritma Greedy, solusi ini memaksimalkan poin tanpa melebihi budget.</em>
+                    </p>
+                `;
+            } else {
+                resultBox.innerHTML = `<h4 style="color: #ff5555;">Budget Tidak Cukup</h4><p>Coba naikkan budget Anda untuk mengunjungi tempat viral.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
